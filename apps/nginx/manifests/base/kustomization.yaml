@@ -5,9 +5,3 @@ kind: Kustomization
 resources:
   - nginx-deployment-template.yaml
   - nginx-service-template.yaml
-
-# Generate a *template* ConfigMap here.
-configMapGenerator:
-  - name: nginx-config-template
-    files:
-      - nginx-config-template.conf
