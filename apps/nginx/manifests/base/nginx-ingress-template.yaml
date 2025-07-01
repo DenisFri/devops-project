@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-template # This is the generic name to be patched
+  annotations:
+    # Example annotation for NGINX Ingress Controller.
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: nginx-template.example.com # Generic host to be patched
+    http:
+      paths:
+      - path: / # Generic path
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service-template # Points to the generic service from base
+            port:
+              number: 80

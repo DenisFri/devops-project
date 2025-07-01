@@ -4,13 +4,14 @@ kind: Kustomization
 bases:
   - ../../base
 
-# Generate a unique ConfigMap for this server directly within the component
 configMapGenerator:
   - name: nginx-config-1
     literals:
       - nginx.conf=server { listen 80; location / { return 200 'Hello from NGINX Server ONE (Cell ID Range 100-199)!'; add_header Content-Type text/plain; } }
 
 patches:
+
+  # --- PATCH FOR DEPLOYMENT ---
   - target:
       kind: Deployment
       name: nginx-server-template
@@ -24,12 +25,11 @@ patches:
       - op: replace
         path: /spec/template/metadata/labels/app
         value: nginx-server-1
-      # Link to this component's specific ConfigMap (generated above)
       - op: replace
         path: /spec/template/spec/volumes/0/configMap/name
         value: nginx-config-1
 
-  # Patch to rename Service
+  # --- PATCH FOR SERVICE ---
   - target:
       kind: Service
       name: nginx-service-template
@@ -40,3 +40,18 @@ patches:
       - op: replace
         path: /spec/selector/app
         value: nginx-server-1
+
+  # --- PATCH FOR INGRESS ---
+  - target:
+      kind: Ingress
+      name: nginx-ingress-template
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nginx-ingress-1
+      - op: replace
+        path: /spec/rules/0/host
+        value: nginx1.yourdomain.com # REPLACE with a unique hostname (e.g., your name or initials)
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend/service/name
+        value: nginx-service-1
