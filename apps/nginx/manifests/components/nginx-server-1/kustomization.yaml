@@ -1,23 +1,20 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Point to the common base templates
 bases:
   - ../../base
 
-# Generate a unique ConfigMap for this server from the base template
 configMapGenerator:
-  - name: nginx-config-1 # This will be the name of the ConfigMap for server 1
+  - name: nginx-config-1
     files:
-      - ../../base/nginx-config-template.conf
-    literals: # Inject the unique content via literals
+      - nginx-config-template.conf
+    literals:
       - nginx.conf=server { listen 80; location / { return 200 'Hello from NGINX Server ONE (Cell ID Range 100-199)!'; add_header Content-Type text/plain; } }
 
-# Apply patches to customize the deployment and service for server 1
 patches:
   - target:
       kind: Deployment
-      name: nginx-server-template # Target the generic name from base
+      name: nginx-server-template
     patch: |-
       - op: replace
         path: /metadata/name

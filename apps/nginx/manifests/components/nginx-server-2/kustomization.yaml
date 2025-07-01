@@ -7,7 +7,7 @@ bases:
 configMapGenerator:
   - name: nginx-config-2
     files:
-      - ../../base/nginx-config-template.conf
+      - nginx-config-template.conf
     literals:
       - nginx.conf=server { listen 80; location / { return 200 'Hello from NGINX Server TWO (Cell ID Range 200-299)!'; add_header Content-Type text/plain; } }
 
