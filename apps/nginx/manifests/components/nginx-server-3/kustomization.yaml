@@ -4,13 +4,6 @@ kind: Kustomization
 bases:
   - ../../base
 
-configMapGenerator:
-  - name: nginx-config-3
-    files:
-      - nginx-config-template.conf
-    literals:
-      - nginx.conf=server { listen 80; location / { return 200 'Hello from NGINX Server THREE (Cell ID Range 300-399)!'; add_header Content-Type text/plain; } }
-
 patches:
   - target:
       kind: Deployment
@@ -38,3 +31,12 @@ patches:
       - op: replace
         path: /spec/selector/app
         value: nginx-server-3
+  - target:
+      kind: ConfigMap
+      name: nginx-config-template
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nginx-config-3
+patchesStrategicMerge:
+  - nginx-config-3-patch.yaml

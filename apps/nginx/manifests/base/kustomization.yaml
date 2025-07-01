@@ -1,6 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+# Resources that define the generic NGINX application
 resources:
   - nginx-deployment-template.yaml
   - nginx-service-template.yaml
-  # config-template is sourced by component's configMapGenerator, not listed as resource here
+
+# Generate a *template* ConfigMap here.
+configMapGenerator:
+  - name: nginx-config-template
+    files:
+      - nginx-config-template.conf
