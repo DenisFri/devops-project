@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-server-template # This is the generic name to be patched
+  name: nginx-server-template
+  labels:
+    app.kubernetes.io/name: nginx-server
 spec:
   replicas: 1
   selector:
@@ -19,9 +21,9 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: nginx-config-volume
-          mountPath: /etc/nginx/nginx.conf
+          mountPath: /etc/nginx/conf.d/nginx-custom.conf
           subPath: nginx.conf
       volumes:
       - name: nginx-config-volume
         configMap:
-          name: nginx-config-template # This is the generic ConfigMap name to be patched
+          name: nginx-config-template
