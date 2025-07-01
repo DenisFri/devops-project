@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../base
+
+configMapGenerator:
+  - name: nginx-config-2
+    files:
+      - ../../base/nginx-config-template.conf
+    literals:
+      - nginx.conf=server { listen 80; location / { return 200 'Hello from NGINX Server TWO (Cell ID Range 200-299)!'; add_header Content-Type text/plain; } }
+
+patches:
+  - target:
+      kind: Deployment
+      name: nginx-server-template
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nginx-server-2
+      - op: replace
+        path: /spec/selector/matchLabels/app
+        value: nginx-server-2
+      - op: replace
+        path: /spec/template/metadata/labels/app
+        value: nginx-server-2
+      - op: replace
+        path: /spec/template/spec/volumes/0/configMap/name
+        value: nginx-config-2
+  - target:
+      kind: Service
+      name: nginx-service-template
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nginx-service-2
+      - op: replace
+        path: /spec/selector/app
+        value: nginx-server-2

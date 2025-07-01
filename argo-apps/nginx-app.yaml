@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-servers
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/DenisFri/devops-project.git
+    targetRevision: HEAD
+    path: apps/nginx/manifests/overlays/dev
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

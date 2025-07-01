@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Reference the components that define each NGINX server instance
+resources:
+  - ../../components/nginx-server-1
+  - ../../components/nginx-server-2
+  - ../../components/nginx-server-3

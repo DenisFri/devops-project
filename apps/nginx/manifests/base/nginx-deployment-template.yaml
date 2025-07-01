@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-server-template # This is the generic name to be patched
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-server-template
+  template:
+    metadata:
+      labels:
+        app: nginx-server-template
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config-template # This is the generic ConfigMap name to be patched
